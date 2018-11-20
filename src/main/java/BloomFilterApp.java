@@ -9,6 +9,7 @@ public class BloomFilterApp {
      * @param args what ever you want
      */
     public static void main(String[] args) {
+        BloomFilter bf = new BloomFilter();
 
     }
 
