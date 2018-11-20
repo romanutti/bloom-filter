@@ -28,6 +28,7 @@ public class BloomFilter {
 
     public BloomFilter() {
         numberOfElements = words.size();
+        filterSize = calculateFilterSize();
     }
 
     private static void readWords() {
@@ -40,4 +41,11 @@ public class BloomFilter {
         }
         System.out.println(words);
     }
+
+    private int calculateFilterSize() {
+        // TODO Check if ceil is correct
+        return (int) Math
+                .ceil((numberOfElements * Math.log(falsePositiveProbability) * -1) / (Math.pow(Math.log(2), 2)));
+    }
+
 }
