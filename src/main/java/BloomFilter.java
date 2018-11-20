@@ -29,6 +29,7 @@ public class BloomFilter {
     public BloomFilter() {
         numberOfElements = words.size();
         filterSize = calculateFilterSize();
+        numberOfHashFunctions = calculateNumberOfHashFunctions();
     }
 
     private static void readWords() {
@@ -39,7 +40,6 @@ public class BloomFilter {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        System.out.println(words);
     }
 
     private int calculateFilterSize() {
@@ -48,4 +48,8 @@ public class BloomFilter {
                 .ceil((numberOfElements * Math.log(falsePositiveProbability) * -1) / (Math.pow(Math.log(2), 2)));
     }
 
+    private int calculateNumberOfHashFunctions() {
+        // TODO Check if ceil is correct
+        return (int) Math.ceil(-1 * Math.log(falsePositiveProbability) / Math.log(2));
+    }
 }
