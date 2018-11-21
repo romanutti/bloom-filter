@@ -10,6 +10,7 @@ public class BloomFilterApp {
      */
     public static void main(String[] args) {
         BloomFilter bf = new BloomFilter();
+        System.out.println(bf.isPossiblyInSet("zoom"));
 
     }
 

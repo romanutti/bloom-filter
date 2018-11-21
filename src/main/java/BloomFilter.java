@@ -55,6 +55,21 @@ public class BloomFilter {
         feedFilter();
     }
 
+    public boolean isPossiblyInSet(String word) {
+        int seed = 0;
+        int resultingIndex = 0;
+
+        while (seed < numberOfHashFunctions) {
+            resultingIndex = getHashedIndex(word, seed);
+            if (resultingIndex > 0 && resultingIndex < filterSize) {
+                if (!filter[resultingIndex])
+                    return false;
+            }
+            seed ++;
+        }
+        return true;
+    }
+
     private static void readWords() {
         try (Scanner s = new Scanner(new FileReader(fileName))) {
             while (s.hasNext()) {
@@ -89,13 +104,17 @@ public class BloomFilter {
     }
 
     private void addWordToFilter(String word, int seed) {
-        int resultingIndex = 0;
-        HashFunction murmur3 = Hashing.murmur3_128(seed);
-
-        HashCode hc = murmur3.newHasher().putString(word, StandardCharsets.UTF_8).hash();
-        resultingIndex = hc.asInt() % filterSize;
+        int resultingIndex = getHashedIndex(word, seed);
         if (resultingIndex > 0 && resultingIndex < filterSize) {
             filter[resultingIndex] = true;
         }
     }
+
+    private int getHashedIndex(String word, int seed) {
+        HashFunction murmur3 = Hashing.murmur3_128(seed);
+        HashCode hc = murmur3.newHasher().putString(word, StandardCharsets.UTF_8).hash();
+
+        return hc.asInt() % filterSize;
+    }
+
 }
