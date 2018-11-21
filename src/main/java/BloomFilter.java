@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -25,7 +26,7 @@ public class BloomFilter {
     /**
      * desired false positive probability, p
      */
-    public double falsePositiveProbability = 0.1;
+    public double falsePositiveProbability = 0.05;
     /**
      * number of elements in filter, n
      */
@@ -65,9 +66,20 @@ public class BloomFilter {
                 if (!filter[resultingIndex])
                     return false;
             }
-            seed ++;
+            seed++;
         }
         return true;
+    }
+
+    public double getFalsePositiveProbability(List<String> input) {
+        double falsePositiveCount = 0.0;
+        for (String word : input) {
+            if (isPossiblyInSet(word) && !words.contains(word))
+                falsePositiveCount++;
+        }
+
+        return falsePositiveCount / input.size();
+
     }
 
     private static void readWords() {
