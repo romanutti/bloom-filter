@@ -21,12 +21,13 @@ public class BloomFilter {
     /**
      * words present in filter
      */
-    public static final ArrayList<String> words = new ArrayList();
+    public static final ArrayList<String> words = new ArrayList<>();
 
     /**
      * desired false positive probability, p
      */
     public double falsePositiveProbability;
+    
     /**
      * number of elements in filter, n
      */
@@ -35,10 +36,12 @@ public class BloomFilter {
      * filter size, m
      */
     public int filterSize;
+    
     /**
      * number of hash functions applied to element, k
      */
     public int numberOfHashFunctions;
+    
     /**
      * array of the result of the hash functions
      */
@@ -54,7 +57,7 @@ public class BloomFilter {
         filterSize = calculateFilterSize();
         numberOfHashFunctions = calculateNumberOfHashFunctions();
         filter = new boolean[filterSize];
-        feedFilter();
+        seedFilter();
     }
 
     public boolean isPossiblyInSet(String word) {
@@ -94,26 +97,21 @@ public class BloomFilter {
     }
 
     private int calculateFilterSize() {
-        // TODO Check if ceil is correct
-        return (int) Math
-                .ceil((-1 * numberOfElements * Math.log(falsePositiveProbability)) / (Math.pow(Math.log(2), 2)));
+        return (int) Math.ceil((-1 * numberOfElements * Math.log(falsePositiveProbability)) / (Math.pow(Math.log(2), 2)));
     }
 
     private int calculateNumberOfHashFunctions() {
-        // TODO Check if ceil is correct
         return (int) Math.ceil(-1 * Math.log(falsePositiveProbability) / Math.log(2));
     }
 
-    private void feedFilter() {
+    private void seedFilter() {
         int seed = 0;
-
         while (seed < numberOfHashFunctions) {
             for (String word : words) {
                 addWordToFilter(word, seed);
             }
             seed++;
         }
-
     }
 
     private void addWordToFilter(String word, int seed) {
@@ -129,5 +127,4 @@ public class BloomFilter {
 
         return Math.abs(hc.asInt() % filterSize);
     }
-
 }

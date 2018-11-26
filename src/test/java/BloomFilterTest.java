@@ -11,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class BloomFilterTest {
+	
     static int wordLimit = 1200000;
     static List<String> randomWords;
     static BloomFilter bloomFilter;
