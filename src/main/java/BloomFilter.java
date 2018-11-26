@@ -26,7 +26,7 @@ public class BloomFilter {
     /**
      * desired false positive probability, p
      */
-    public double falsePositiveProbability = 0.01;
+    public double falsePositiveProbability;
     /**
      * number of elements in filter, n
      */
@@ -48,7 +48,8 @@ public class BloomFilter {
         readWords();
     }
 
-    public BloomFilter() {
+    public BloomFilter(double falsePositiveProbability) {
+        this.falsePositiveProbability = falsePositiveProbability;
         numberOfElements = words.size();
         filterSize = calculateFilterSize();
         numberOfHashFunctions = calculateNumberOfHashFunctions();

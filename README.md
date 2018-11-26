@@ -8,11 +8,11 @@ These instructions will help you to run the application on your local machine.
 
 ### Configuration
 
-The application can be configured in the class *BloomFilterApp*.
+The application can be configured in the class *BloomFilter*.
 
 ### Run application
 
-The application can be run using the main-methon in the class *BloomFilterApp*.
+The application can be run using the test-methods in the class *BloomFilterTest*.
 
 ## Authors
 

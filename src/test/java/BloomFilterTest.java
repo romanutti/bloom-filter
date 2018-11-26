@@ -11,12 +11,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class BloomFilterTest {
-    static int wordLimit = 1000000;
+    static int wordLimit = 1200000;
     static List<String> randomWords;
     static BloomFilter bloomFilter;
 
     @BeforeClass public static void setup() {
-        bloomFilter = new BloomFilter();
+        bloomFilter = new BloomFilter(0.01);
         randomWords = generateRandomWords();
     }
 
@@ -24,21 +24,72 @@ public class BloomFilterTest {
         for (String word : bloomFilter.words) {
             assertTrue(bloomFilter.isPossiblyInSet(word));
         }
+
+        // print summary
+        System.out.println("################################################");
+        System.out.println("#                                               ");
+        System.out.println("# testContainedWords                            ");
+        System.out.println("#                                               ");
+        System.out.println("# Result: success, all words recognized         ");
+        System.out.println("################################################");
     }
 
     @Test public void testNotContainedWords() {
-        double falsePositiveProbability = bloomFilter.getFalsePositiveProbability(randomWords);
+        // test(1)
+        BloomFilter t1 = new BloomFilter(0.01);
 
-        System.out.println(bloomFilter.falsePositiveProbability + " " + falsePositiveProbability);
-        assertEquals(bloomFilter.falsePositiveProbability, falsePositiveProbability, 0.1);
+        double falsePositiveProbability = t1.getFalsePositiveProbability(randomWords);
+        assertEquals(t1.falsePositiveProbability, falsePositiveProbability, 0.1);
+
+        // print summary
+        System.out.println("################################################");
+        System.out.println("#                                               ");
+        System.out.println("# testNotContainedWords                         ");
+        System.out.println("#                                               ");
+        System.out.println("# Test(1)                                       ");
+        System.out.println("# Testwords: " + t1.numberOfElements);
+        System.out.println("# m: " + t1.filterSize);
+        System.out.println("# k: " + t1.numberOfHashFunctions);
+        System.out.println("# p expected: " + t1.falsePositiveProbability);
+        System.out.println("# p actual: " + falsePositiveProbability);
+
+        // test(2)
+        BloomFilter t2 = new BloomFilter(0.05);
+
+        falsePositiveProbability = t2.getFalsePositiveProbability(randomWords);
+        assertEquals(t2.falsePositiveProbability, falsePositiveProbability, 0.1);
+
+        // print summary
+        System.out.println("#                                               ");
+        System.out.println("# Test(2)                                       ");
+        System.out.println("# Testwords: " + t2.numberOfElements);
+        System.out.println("# m: " + t2.filterSize);
+        System.out.println("# k: " + t2.numberOfHashFunctions);
+        System.out.println("# p expected: " + t2.falsePositiveProbability);
+        System.out.println("# p actual: " + falsePositiveProbability);
+
+        // test(3)
+        BloomFilter t3 = new BloomFilter(0.1);
+
+        falsePositiveProbability = t3.getFalsePositiveProbability(randomWords);
+        assertEquals(t3.falsePositiveProbability, falsePositiveProbability, 0.1);
+
+        // print summary
+        System.out.println("#                                               ");
+        System.out.println("# Test(3)                                       ");
+        System.out.println("# Testwords: " + t3.numberOfElements);
+        System.out.println("# m: " + t3.filterSize);
+        System.out.println("# k: " + t3.numberOfHashFunctions);
+        System.out.println("# p expected: " + t3.falsePositiveProbability);
+        System.out.println("# p actual: " + falsePositiveProbability);
+        System.out.println("################################################");
     }
 
     private static List<String> generateRandomWords() {
         List<String> randomWords = new ArrayList<>();
         int i = 0;
-        System.out.println(bloomFilter.filterSize);
 
-        while (i < wordLimit ){
+        while (i < wordLimit) {
             randomWords.add(generateRandomString());
             i++;
         }
