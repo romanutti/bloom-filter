@@ -120,6 +120,8 @@ Die folgende Tabelle beschreibt den Einsatz von Bloom-Filter gegenüber anderen 
 		\lipsum[1] Ein Bloom-Filter kann erkennen, ob ein Wort \textit{nicht} im Filter vorhanden ist - ob ein Wort allerdings mit Sicherheit im Filter vorkommt kann nicht bestimmt werden.
 		\par
 		\lipsum[2] Der Bloom-Filter ist einfach umzusetzen, falls Wörter nur hinzugefügt werden. Die eingangs beschriebene Funktionsweise eignet sich allerdings nicht, falls Wörter auch entfernt oder zu einem späteren Zeitpunkt geändert werden müssen.
+		\par
+		\lipsum[3] Wird ein Bloom-Filter erstellt, so werden die damit verbundenen Daten nicht gespeichert. Dies führt zur Einschränkung, dass nicht auf die Daten zugegriffen werden kann, da nur deren Hash-Werte im Bloom-Filter gespeichert sind.
 
 		\\\bottomrule
 	\end{tabularx}
