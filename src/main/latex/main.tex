@@ -95,11 +95,11 @@ Die möglichen Hash-Werte sind in verschiedene Wertebereiche unterteilt - jeder 
 
 \newpage
 Bei einem Lesezugriff auf die Daten kann anhand des Wertebereichs ermittelt werden, auf welchen Nodes die Datenfiles (sog. "SSTables") gelesen werden müssen. In Apache Cassandra werden Bloom Filter eingesetzt, um zu ermitteln ob ein Datensatz in einem Datenfile vorhanden ist. Falls der Filter ein positive Ergebnis liefert und der Datensatz dennoch nicht in dem Datenfile vorhanden ist, handelt es sich um ein "false positive". Da Festplattenzugriffe auf die Disk in der Regel kostenintensiver sind als jene im Memory, wird der Bloom-Filter vollständig im Memory umgesetzt.
-\begin{figure}
-	\includegraphics[width=\linewidth]{cassandra_bloomfilter.png} % Figure image
-	\caption{Bloomfilter in Apache Cassandra} % Figure caption
-	\label{cassandra_bloomfilter} % Label for referencing with \ref{cassandra_bloomfilter}
-\end{figure}
+%\begin{figure}
+%	\includegraphics[width=\linewidth]{cassandra_bloomfilter.png} % Figure image
+%	\caption{Bloomfilter in Apache Cassandra} % Figure caption
+%	\label{cassandra_bloomfilter} % Label for referencing with \ref{cassandra_bloomfilter}
+%\end{figure}
 
 \section{Vor- und Nachteile}
 
@@ -131,24 +131,31 @@ Die folgende Tabelle beschreibt den Einsatz von Bloom-Filter gegenüber anderen 
 
 \section{Vergleich erwartete und effektive Fehlerwahrscheinlichkeit}
 
-\begin{table}
-	\caption{Erreichte Werte}
+Im Verzeichnis \texttt{/src/test/} befinden sich zwei Test.
+Der Test \texttt{testContainedWords} stellt sicher, dass alle Wörter des Filters auch als möglicherweise im Filter klassifitiziert werden.
+Der Text \texttt{testNotContainedWords} vergleicht die erwarteten und die effektiven Fehlerwahrscheinlichkeiten.
+Nach Abschluss des Tests wird eine Übersicht ausgegegeben.
+Die Resultate sind in Tabelle \ref{tests} ersichtlich.
+
+\begin{table}[h]
+	\caption{Testresultate}
+	\label{tests}
 	\centering
-	\begin{tabular}{llr}
+	\begin{tabular}{crrr}
 		\toprule
 		%\multicolumn{2}{c}{Parameter} \\
 		\cmidrule(r){1-2}
-		Parameter & Grade \\
+		Parameter & Test(1) & Test(2) & Test(3) \\
 		\midrule
-		Filtergrösse m & $7.5$ \\
-		Anzahl Hashfunktionen k & $5$ \\
-		Erwartete Fehlerwahrscheinlichkeit p & $5$ \\
-		Effektive Fehlerwahrscheinlichkeit & $5$ \\
+		Testwörter (Mio) & $1.2$ & $1.2$ & $1.2$ \\
+		m & $7.5$ & \\
+		k & $5$ & \\
+		p erwartet & $5$ & \\
+		p effektiv & $5$ & \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-This sentence requires
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
