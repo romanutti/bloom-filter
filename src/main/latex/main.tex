@@ -1,0 +1,171 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bloom filter
+% Module dist
+% Assignment 02
+%
+% This template was downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Authors:
+% Marco Romanutti
+% Dominik Fringeli
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[10pt, a4paper, twocolumn]{article} % 10pt font size (11 and 12 also possible), A4 paper (letterpaper for US letter) and two column layout (remove for one column)
+
+\input{structure.tex} % Specifies the document structure and loads requires packages
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{Bloom-Filter} % The article title
+
+\author{
+	\authorstyle{Marco Romanutti\textsuperscript{1,2} und Dominik Fringeli\textsuperscript{1,2}} % Authors
+	\newline\newline % Space before institutions
+	\textsuperscript{1}\institution{Fachhochschule Nordwestschweiz FHNW, Brugg}\\ % Institution
+	\textsuperscript{2}\texttt{Diskrete Stochastik, Klasse 3Ia/5Ibb/5iCbb} % Module
+}
+
+\date{}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Print the title
+
+\thispagestyle{firstpage} % Apply the page style for the first page (no headers and footers)
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT
+%----------------------------------------------------------------------------------------
+
+\lettrineabstract{Ein Bloom-Filter ist eine Datenstruktur, welche eine schnelle Aussage darüber erlaubt, ob Daten in einer Datenbasis vorhanden sind oder nicht. Grundlage des Filters bilden Hash-Verfahren, welche den Elementen eines Datenstroms möglichst eindeutige Werte zuweisen. Ursprünglich wurden Bloom-Filter zur Rechtschreibkontrolle entwickelt - heute werden sie oft in Datenbanksystemen oder für das Routing in Netzwerken eingesetzt.}
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\section{Funktionsweise}
+
+Der Bloom-Filter wird mithilfe eines \textit{m}-stelligen Arrays und \textit{k} unterschiedlichen Hashfunktionen umgesetzt. Im \textit{m}-stelligen Array sind zunächst alle Werte mit Nullen gefüllt. Im folgenden Beispiel besteht ein Filter aus 10 Bits (\textit{m=10}) und 3 Hashfunktionen (\textit{k=3}):
+\begin{align}
+	A =
+	\begin{bmatrix}
+		0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
+	\end{bmatrix}
+\end{align}
+
+Der Filter wird anschliessend mit Werten befüllt. Dazu werden die Hashfunktionen auf jedes Element der Datenbasis angewendet. Jeder daraus resultierende Wert entspricht einer Indexposition. Im \textit{m}-stelligen Array werden die Werte jener Indexpositionen auf 1 gestellt. Angenommen, die 3 Hashfunktionen liefern die Werte 1, 6 und 7 für das Wort "klar". Dazu werden die Positionen 1, 6 und 7 im Array auf 1 gesetzt:
+
+\begin{align}
+	A =
+	\begin{bmatrix}
+		1 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0
+	\end{bmatrix}
+\end{align}
+
+Falls nun überprüft werden soll, ob sich ein bestimmtes Element in der Datenbasis befindet, müssen dessen Hash-Werte ermittelt werden.
+Die resultierenden Werte entsprechen wiederum Indexpositionen im Array. Falls an jeder der \textit{k} Hashfunktionen eine 1 steht, ist das Wort in der Datenbasis vorhanden.
+Das Wort "zentral" mit den Hashwerten 1, 4 und 9 befindet sich beispielsweise nicht in der Datenbasis. Für jedes weitere Wort, welches wir der Datenbasis hinzufügen, werden weitere Werte im Array auf 1 gestellt.
+Falls die Vorhandenseinsprüfung eines Worts positiv ausfällt, kann der Fall auftreten, dass das Element trotzdem nicht in der Datenbasis vorhanden ist (sog. "false positive").
+In diesem Fall liefert die Prüfung wahr, weil zwar alle Werte der ermittelten Indexpositionen auf 1 stehen - diese jedoch von unterschiedlichen Elementen stammen.
+
+\section{Anwendungsbeispiel}
+\label{anwendung}
+Apache  Cassandra  ist  ein  verteiltes,  skalierbares  Datenbanksystem. Es baut auf einer Shared-Nothing-Architektur auf. Bei dieser
+Architekturform werden die Daten auf verschiedene Datenbank-Nodes in einem zusammengehörigen Datenbank-Cluster verteilt (sog. „Sharding“).
+Die Zuordnung zu einem Node erfolgt, indem der Schlüsselwert (engl. Partition Key) eines Datensatzes gehashed wird. Bei Apache Cassandra werden standardmässig Murmur3-Hashes eingesetzt.
+Die möglichen Hash-Werte sind in verschiedene Wertebereiche unterteilt - jeder Node ist für einen Wertebereich zuständig. Die folgende Abbildung \ref{scylla_ring} stellt das Verteilen der Daten auf den verschiedenen Datenbank-Nodes dar.
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{scylla_partitioning.png} % Figure image
+	\caption{Sharding in Apache Cassandra} % Figure caption
+	\label{scylla_ring} % Label for referencing with \ref{scylla_ring}
+\end{figure}
+
+\newpage
+Bei einem Lesezugriff auf die Daten kann anhand des Wertebereichs ermittelt werden, auf welchen Nodes die Datenfiles (sog. "SSTables") gelesen werden müssen. In Apache Cassandra werden Bloom Filter eingesetzt, um zu ermitteln ob ein Datensatz in einem Datenfile vorhanden ist. Falls der Filter ein positive Ergebnis liefert und der Datensatz dennoch nicht in dem Datenfile vorhanden ist, handelt es sich um ein "false positive". Da Festplattenzugriffe auf die Disk in der Regel kostenintensiver sind als jene im Memory, wird der Bloom-Filter vollständig im Memory umgesetzt.
+\begin{figure}
+	\includegraphics[width=\linewidth]{cassandra_bloomfilter.png} % Figure image
+	\caption{Bloomfilter in Apache Cassandra} % Figure caption
+	\label{cassandra_bloomfilter} % Label for referencing with \ref{cassandra_bloomfilter}
+\end{figure}
+
+\section{Vor- und Nachteile}
+
+Die folgende Tabelle beschreibt den Einsatz von Bloom-Filter gegenüber anderen Lösungsansätzen:
+
+\begin{table}[h]
+	\begin{tabularx}{\linewidth}{>{\parskip1ex}X@{\kern4\tabcolsep}>{\parskip1ex}X}
+		\toprule
+		\hfil\bfseries Pros
+		&
+		\hfil\bfseries Cons
+		\\\cmidrule(r{3\tabcolsep}){1-1}\cmidrule(l{-\tabcolsep}){2-2}
+
+		%% PROS, seperated by empty line or \par
+		\lipsum[1] Anstelle der eigentlichen Daten werden nur die Hashes der Elemente gespeichert. Dadurch wird weniger Speicherkapazität benötigt.
+		\par
+		\lipsum[2] Das Hinzufügen und Prüfen von Elementen gehört zur Komplexitätsklasse \textit{O(k)}. Weil die verschiedenen Hashverfahren voneinander unabhängig sind, kann die Anwendung ebendieser parallelisiert werden.
+		\par
+		\lipsum[3] Durch die Anwendung von Hashfunktionen auf die einzelnen Werte kann der Nachteil von unregelmässig verteilten Daten verringert werden. In verteilten Datenbanken wird durch das Hashing-Verfahren eine gleichmässigere Verteilung der Daten auf den verschiedenen Datenbank-Nodes erreicht (vgl. Kapitel \ref{anwendung}).
+
+		&
+		%% CONS, seperated by empty line or \par
+		\lipsum[1] sdfd%TODO Cons hinzufügen
+
+		\\\bottomrule
+	\end{tabularx}
+	\caption{Gegenüberstellung Vorteile und Nachteile}
+\end{table}
+
+\section{Vergleich erwartete und effektive Fehlerwahrscheinlichkeit}
+
+\begin{table}
+	\caption{Erreichte Werte}
+	\centering
+	\begin{tabular}{llr}
+		\toprule
+		%\multicolumn{2}{c}{Parameter} \\
+		\cmidrule(r){1-2}
+		Parameter & Grade \\
+		\midrule
+		Filtergrösse m & $7.5$ \\
+		Anzahl Hashfunktionen k & $5$ \\
+		Erwartete Fehlerwahrscheinlichkeit p & $5$ \\
+		Effektive Fehlerwahrscheinlichkeit & $5$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+This sentence requires
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+\begin{thebibliography}{9}
+	\bibitem{wikipedia}
+	Wikipedia: Bloom filter,
+	\texttt{https://en.wikipedia.org/wiki/Bloom\_filter}
+
+	\bibitem{scylla}
+	ScyllaDB: Announcing ring architecture,
+	\texttt{https://www.scylladb.com/2017/09/25/announcing-ring-architecture-docs/}
+
+	\bibitem{datastax}
+	Datastax: How data is distributed across a cluster,
+	\texttt{https://docs.datastax.com/en/cassandra/3.0/cassandra/architecture/archDataDistributeDistribute.html}
+\end{thebibliography}
+%----------------------------------------------------------------------------------------
+
+\end{document}
