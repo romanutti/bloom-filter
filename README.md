@@ -19,4 +19,7 @@ The application can be run using the main-methon in the class *BloomFilterApp*.
 * **Marco Romanutti** - [FHNW](https://gitlab.fhnw.ch/marco.romanutti/dist.git)
 * **Dominik Fringeli** - [FHNW](https://gitlab.fhnw.ch/marco.romanutti/dist.git)
 
+## Acknowledgments
 
+* Latex documents generated with [TeXifY](https://plugins.jetbrains.com/plugin/9473-texify-idea)
+* Latex template downloaded from [latextemplates.com](https://www.latextemplates.com/template/wenneker-article)
