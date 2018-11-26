@@ -36,6 +36,7 @@ public class BloomFilterTest {
     private static List<String> generateRandomWords() {
         List<String> randomWords = new ArrayList<>();
         int i = 0;
+        System.out.println(bloomFilter.filterSize);
 
         while (i < wordLimit ){
             randomWords.add(generateRandomString());

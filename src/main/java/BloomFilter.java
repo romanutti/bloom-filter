@@ -26,7 +26,7 @@ public class BloomFilter {
     /**
      * desired false positive probability, p
      */
-    public double falsePositiveProbability = 0.05;
+    public double falsePositiveProbability = 0.01;
     /**
      * number of elements in filter, n
      */
@@ -95,7 +95,7 @@ public class BloomFilter {
     private int calculateFilterSize() {
         // TODO Check if ceil is correct
         return (int) Math
-                .ceil((numberOfElements * Math.log(falsePositiveProbability) * -1) / (Math.pow(Math.log(2), 2)));
+                .ceil((-1 * numberOfElements * Math.log(falsePositiveProbability)) / (Math.pow(Math.log(2), 2)));
     }
 
     private int calculateNumberOfHashFunctions() {
@@ -126,7 +126,7 @@ public class BloomFilter {
         HashFunction murmur3 = Hashing.murmur3_128(seed);
         HashCode hc = murmur3.newHasher().putString(word, StandardCharsets.UTF_8).hash();
 
-        return hc.asInt() % filterSize;
+        return Math.abs(hc.asInt() % filterSize);
     }
 
 }
