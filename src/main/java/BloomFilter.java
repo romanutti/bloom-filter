@@ -40,7 +40,7 @@ public class BloomFilter {
      */
     public int numberOfHashFunctions;
     /**
-     * number of hash functions applied to element, k
+     * array of the result of the hash functions
      */
     public boolean filter[];
 
