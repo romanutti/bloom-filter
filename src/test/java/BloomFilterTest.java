@@ -39,7 +39,7 @@ public class BloomFilterTest {
         // test(1)
         BloomFilter t1 = new BloomFilter(0.01);
 
-        double falsePositiveProbability = t1.getFalsePositiveProbability(randomWords);
+        double falsePositiveProbability = t1.getFalsePositiveProportion(randomWords);
         assertEquals(t1.falsePositiveProbability, falsePositiveProbability, 0.1);
 
         // print summary
@@ -57,7 +57,7 @@ public class BloomFilterTest {
         // test(2)
         BloomFilter t2 = new BloomFilter(0.05);
 
-        falsePositiveProbability = t2.getFalsePositiveProbability(randomWords);
+        falsePositiveProbability = t2.getFalsePositiveProportion(randomWords);
         assertEquals(t2.falsePositiveProbability, falsePositiveProbability, 0.1);
 
         // print summary
@@ -72,7 +72,7 @@ public class BloomFilterTest {
         // test(3)
         BloomFilter t3 = new BloomFilter(0.1);
 
-        falsePositiveProbability = t3.getFalsePositiveProbability(randomWords);
+        falsePositiveProbability = t3.getFalsePositiveProportion(randomWords);
         assertEquals(t3.falsePositiveProbability, falsePositiveProbability, 0.1);
 
         // print summary

@@ -60,6 +60,12 @@ public class BloomFilter {
         seedFilter();
     }
 
+    /**
+     * Checks if the given word is in the filter
+     * @param the word to check
+     * @return If it returns true, then the word could be in the set.
+     * If it returns false, then the word is not in the set.
+     */
     public boolean isPossiblyInSet(String word) {
         int seed = 0;
         int resultingIndex = 0;
@@ -75,15 +81,18 @@ public class BloomFilter {
         return true;
     }
 
-    public double getFalsePositiveProbability(List<String> input) {
+    /**
+     * Gets false positive probability of the given list
+     * @param input list of strings
+     * @return the proportion of false positive cases in relation to the size of the input
+     */
+    public double getFalsePositiveProportion(List<String> input) {
         double falsePositiveCount = 0.0;
         for (String word : input) {
             if (isPossiblyInSet(word) && !words.contains(word))
                 falsePositiveCount++;
         }
-
         return falsePositiveCount / input.size();
-
     }
 
     private static void readWords() {
