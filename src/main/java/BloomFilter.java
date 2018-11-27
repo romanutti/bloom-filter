@@ -61,10 +61,10 @@ public class BloomFilter {
     }
 
     /**
-     * Checks if the given word is in the filter
-     * @param the word to check
-     * @return If it returns true, then the word could be in the set.
-     * If it returns false, then the word is not in the set.
+     * Checks if the given word is in the filter.
+     * @param word the word to check
+     * @return if it returns true, then the word could be in the set.
+     *         if it returns false, then the word is not in the set.
      */
     public boolean isPossiblyInSet(String word) {
         int seed = 0;
@@ -82,9 +82,9 @@ public class BloomFilter {
     }
 
     /**
-     * Gets false positive probability of the given list
+     * Gets false positive probability of the given list.
      * @param input list of strings
-     * @return the proportion of false positive cases in relation to the size of the input
+     * @return the effective false positive probability
      */
     public double getFalsePositiveProportion(List<String> input) {
         double falsePositiveCount = 0.0;
@@ -95,6 +95,9 @@ public class BloomFilter {
         return falsePositiveCount / input.size();
     }
 
+    /**
+     * Reads words once from file.
+     */
     private static void readWords() {
         try (Scanner s = new Scanner(new FileReader(fileName))) {
             while (s.hasNext()) {
@@ -105,14 +108,25 @@ public class BloomFilter {
         }
     }
 
+    /**
+     * Calculates filter size, m
+     * @return m
+     */
     private int calculateFilterSize() {
         return (int) Math.ceil((-1 * numberOfElements * Math.log(falsePositiveProbability)) / (Math.pow(Math.log(2), 2)));
     }
 
+    /**
+     * Calculates number of hash functions, k.
+     * @return k
+     */
     private int calculateNumberOfHashFunctions() {
         return (int) Math.ceil(-1 * Math.log(falsePositiveProbability) / Math.log(2));
     }
 
+    /**
+     * Initially sets up filter
+     */
     private void seedFilter() {
         int seed = 0;
         while (seed < numberOfHashFunctions) {
@@ -123,6 +137,11 @@ public class BloomFilter {
         }
     }
 
+    /**
+     * Adds a word to the filter.
+     * @param word word to be added
+     * @param seed seed to be used in hash function
+     */
     private void addWordToFilter(String word, int seed) {
         int resultingIndex = getHashedIndex(word, seed);
         if (resultingIndex > 0 && resultingIndex < filterSize) {
@@ -130,6 +149,12 @@ public class BloomFilter {
         }
     }
 
+    /**
+     * Calculates the murmur3 hash for a word and a given seed.
+     * @param word Word to be added
+     * @param seed Seed to be used in hash function
+     * @return murmur3 hash % m
+     */
     private int getHashedIndex(String word, int seed) {
         HashFunction murmur3 = Hashing.murmur3_128(seed);
         HashCode hc = murmur3.newHasher().putString(word, StandardCharsets.UTF_8).hash();

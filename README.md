@@ -8,7 +8,7 @@ These instructions will help you to run the application on your local machine.
 
 ### Configuration
 
-The application can be configured in the class *BloomFilter*.
+The application can be configured in the class *BloomFilterTest*.
 
 ### Run application
 

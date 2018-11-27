@@ -132,7 +132,7 @@ Die folgende Tabelle beschreibt den Einsatz von Bloom-Filter gegenüber anderen 
 \subsection{BloomFilter-Applikation}
 
 In der Applikation (Git-Repo: \url{https://gitlab.fhnw.ch/marco.romanutti/bloom-filter.git}) wurde ein einfacher Bloom-Filter implementiert und getestet.
-Die Konfiguration kann über Attribute der Klasse \texttt{BloomFilter} vorgenommen werden.
+Die Konfiguration kann in der Klasse \texttt{BloomFilterTest} vorgenommen werden. Die Anzahl Testwörter wird über das Attribut \texttt{wordLimit} gesetzt. Die erwartete Fehlerwahrscheinlichkeit kann direkt beim Aufruf des Konstruktors \texttt{BloomFilter(double falsePositiveProbability)} als Argument mitgegeben werden.
 Um die Funktionsweise des Filters zu überprüfen, können die Tests im Verzeichnis \texttt{/src/test/} gestartet werden.
 
 \subsection{Vergleich erwartete und effektive Fehlerwahrscheinlichkeit}
